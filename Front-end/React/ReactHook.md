@@ -198,8 +198,8 @@ const React = (function() {
 
 ## Hook의 종류
 #### 기본 Hook
-- useState
-- useEffect
+- [useState](#usestate)
+- [useEffect](#useeffect)
 - useContext
 #### 추가 Hooks
 - useReducer
@@ -214,6 +214,7 @@ const React = (function() {
 공식 문서를 참고하면 이렇게 있습니다. 저는 일단, 자주 사용하는 useState ~ useRef까지만 정리해보겠습니다.
 ### useState
 `state`는 컴포넌트가 유저 입력과 같은 정보를 기억하게 해주는 동적인 상태값입니다.
+`useState`는 이러한 상태값과 그 값을 갱신하는 함수를 반환합니다.
 
 사용법은 다음과 같습니다.
 ```
@@ -236,7 +237,6 @@ const [state, setState] = useState({});
 /* boolean */
 const [state, setState] = useState(true);
 ```
-이처럼 `useState`는 상태값과 그 값을 갱신하는 함수를 반환합니다.
 
 `setState`를 통해서 `state`를 갱신하면, 새 `state` 값을 받아서 컴포넌트 리렌더링을 큐에 등록합니다. 그러면 다음 리렌더링 시에 반환받은 `state` 값은 항상 갱신된 최신 `state`입니다.
 
@@ -312,3 +312,40 @@ onClick={()=> {
 ```
 setMovie가 값이 바뀐 것을 인지하고 리렌더링해주는 것을 확인할 수 있습니다.
 
+### useEffect
+`useEffect`는 리액트의 생명주기와 연관이 되었는 훅입니다. 
+리액트의 함수 컴포넌트의 본문 안에서는 사이드 이펙트가 허용되지 않습니다. 이를 수행한다면 많은 버그들과 UI 불일치가 발생할 것이기 때문입니다. 따라서 리액트는 `useEffect`를 제공합니다.
+
+`useEffect`에 전달된 함수의 실행 조건에 대해서 알아보겠습니다.
+
+- **마운트:**</br>
+&nbsp;&nbsp; - 컴포넌트가 페이지에 처음 **렌더링 된 후** **무조건** 실행</br>
+- **업데이트:**</br>
+&nbsp;&nbsp; - dependency 배열에 들어있는 state 값이 변경될 경우 실행</br>
+&nbsp;&nbsp; - 부모가 리렌더링되는 경우 실행</br>
+&nbsp;&nbsp; - context가 바뀔 때 실행</br>
+- **언마운트:**</br>
+&nbsp;&nbsp; - 컴포넌트가 페이지에서 사라질 때</br>
+
+사용법은 다음과 같습니다.
+
+```
+// 1. 렌더링될 때마다 실행
+useEffect(() => { 작업내용 });
+ 
+// 2. 컴포넌트가 마운트될 때 한 번만 실행
+useEffect(() => { 작업내용 },[]);
+ 
+// 3. 컴포넌트가 마운트될 때 + dependency array의 값이 변경 될 때마다 실행
+useEffect(() => { 작업내용 },[value]);
+ 
+useEffect(() => { 
+	
+});
+```
+##### 1. 렌더링될 때마다 실행
+기본적으로 useEffect의 동작은 첫번째 렌더링을 포함한 모든 렌더링이 완료된 후마다 실행되기 됩니다. 따라서 `1.`의 경우, dependency 배열이 존재하지 않기 때문에 state가 변경될 때마다 (즉, 화면이 리렌더링될 때마다) 실행이 됩니다.
+
+##### 2. 컴포넌트가 마운트될 때 한 번만 실행, 3. 컴포넌트가 마운트될 때 + dependency array의 값이 변경 될 때마다 실행
+dependency 배열을 빈 배열로 주면 처음 마운팅될 때 한 번 실행된 후, effect(useEffect 안에 작성된 함수)가 실행되지 않습니다. 
+다시 말해, 기본적으로는 첫번째 렌더링 + 모든 렌더링 완료된 후마다 실행되지만, dependency 배열이 **존재**하는 경우에는 dependency 배열에 있는 props, state 변경에 따른 리렌더링 시에만 effect가 실행됩니다.
