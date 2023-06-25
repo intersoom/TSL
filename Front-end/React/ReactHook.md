@@ -155,12 +155,12 @@ function RenderFunctionComponent() {
 다음과 같이 상태가 잘못 참조되는 일이 발생할 수 있기 때문에 **반복문, 중첩문, 조건문 내에서는 사용할 수 없습니다!**
 
 ### useEffect의 작동 방식
-상태의 변화에 따른 사이드 이펙트를 위해서는 `useEffect`가 필요하다.
-기본적인 작동 방식은 의존성 배열 안에 있는 상태를 관찰하고 상태에 변화가 있다면, 콜백이 실행되는 방식이다.
-렌더링시, 최초에 한 번만 실행된다.
-의존성 배열이 비어있다면, 최초 렌더링 한번시에만 콜백이 실행된다.
+상태의 변화에 따른 사이드 이펙트를 위해서는 `useEffect`가 필요합니다.
+기본적인 작동 방식은 의존성 배열 안에 있는 상태를 관찰하고 상태에 변화가 있다면, 콜백이 실행되는 방식입니다.
+렌더링시, 최초에 한 번만 실행됩니다.
+의존성 배열이 비어있다면, 최초 렌더링 한번시에만 콜백이 실행됩니다.
 
-따라서 다시 말해, 의존성 배열을 관찰하면서 값이 변했다면 콜백 함수를 실행시키고 그렇지 않다면, 실행하지 않게 만들면 되는 것이다.
+따라서 다시 말해, 의존성 배열을 관찰하면서 값이 변했다면 콜백 함수를 실행시키고 그렇지 않다면, 실행하지 않게 만들면 되는 것입니다.
 
 ```
 const React = (function() {
@@ -194,4 +194,121 @@ const React = (function() {
 })()
 ```
 
-따라서 위와 같이 구현하여서 `oldDeps`와의 차이를 확인하고 그렇다면, 콜백함수 실행 아니면 실행하지 않게 만들어줬다.
+따라서 위와 같이 구현하여서 `oldDeps`와의 차이를 확인하고 그렇다면, 콜백함수 실행 아니면 실행하지 않게 만들어습니다.
+
+## Hook의 종류
+#### 기본 Hook
+- useState
+- useEffect
+- useContext
+#### 추가 Hooks
+- useReducer
+- useCallback
+- useMemo
+- useRef
+- useImperativeHandle
+- useLayoutEffect
+- useDebugValue
+- useTransition
+- useId
+공식 문서를 참고하면 이렇게 있습니다. 저는 일단, 자주 사용하는 useState ~ useRef까지만 정리해보겠습니다.
+### useState
+`state`는 컴포넌트가 유저 입력과 같은 정보를 기억하게 해주는 동적인 상태값입니다.
+
+사용법은 다음과 같습니다.
+```
+import { useState } from 'react';
+
+const [state, setState] = useState(초기값);
+ 
+/* 숫자형 */
+const [state, setState] = useState(0);
+ 
+/* 문자형 */
+const [state, setState] = useState('');
+ 
+/* Array */
+const [state, setState] = useState([]);
+ 
+/* object */
+const [state, setState] = useState({});
+ 
+/* boolean */
+const [state, setState] = useState(true);
+```
+이처럼 `useState`는 상태값과 그 값을 갱신하는 함수를 반환합니다.
+
+`setState`를 통해서 `state`를 갱신하면, 새 `state` 값을 받아서 컴포넌트 리렌더링을 큐에 등록합니다. 그러면 다음 리렌더링 시에 반환받은 `state` 값은 항상 갱신된 최신 `state`입니다.
+
+함수적인 갱신도 가능합니다.
+이전 `state`값을 이용해서 새로운 `state` 값을 계산하는 경우, 다음과 같이 사용 가능합니다.
+```
+function Counter({initialCount}) {
+  const [count, setCount] = useState(initialCount);
+  return (
+    <>
+      Count: {count}
+      <button onClick={() => setCount(initialCount)}>Reset</button>
+      <button onClick={() => setCount(prevCount => prevCount - 1)}>-</button>
+      <button onClick={() => setCount(prevCount => prevCount + 1)}>+</button>
+    </>
+  );
+}
+```
+
+이때, 주의할 점은 업데이트 함수가 현재 상태와 정확히 동일한 값을 반환한다면 바로 뒤에 일어날 리렌더링은 무시됩니다.
+조금 더 자세하게 들어가보겠습니다.
+
+다음과 같은 코드를 실행했다고 해봅시다.
+```
+const [movie, setMovie] = useState(['어바웃타임', '이터널 선샤인', '500일의 썸머']);
+...생략...
+onClick={()=> {
+          let copy = movie;
+          copy[0] = '꽃다발 같은 사랑을 했다';
+          setMovie(copy)
+        }}
+```
+이 때, 객체나 배열의 경우에는 원본 데이터를 직접 조작하는 것보다 기존 데이터는 보존도록 작성하는 것이 중요하기 때문에 copy라는 변수를 만들어서 복사해보았습니다.
+하지만, onClick을 실행해도 movie state의 [0] 값이 변하지 않습니다. 앞서 말씀드린대로 **동일한 값을 반환한다면 바로 뒤에 일어날 리렌더링이 무시된 것**일겁니다. (React에서는 [Object.is 비교 알고리즘](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/is#Description) 사용
+값을 변경했는데, 왜 동일한 값으로 인식되고 리렌더링이 무시된걸까요?
+
+이는 React보다는 Javascript에 대한 이해도가 필요합니다. 
+
+Javascript 엔젠에는 스택과 힙이라는 영역이 존재합니다.
+스택은 원시값과 같은 정적 메모리를 할당하는 공간이고 힙은 참조값과 같은 동적 메모리를 할당하는 공간입니다.
+이 때, Javascript의 모든 변수는 스택을 가리킵니다. 이 때, 원시 값이 아닌 경우에는 스택에는 힙의 객체에 대한 참조가 포함됩니다.
+왜냐하면, 앞서 언급한대로 Javascript에서 객체와 함수는 힙에 저장되기 때문입니다.
+
+조금 더 명시적으로 설명해보자면,
+```
+const dog = {
+  name: 'puppy',
+  id: 1
+}
+```
+에서 `dog`는 스택 영역에 저장되고 `{name, id}`의 내용은 힙 영역에 저장됩니다.
+그래서 `dog`와 함께 스택 영역에는 힙영역에 존재하는 `{name, id}`에 대한 참조가 함께 저장되는 것입니다.
+
+다시 `useState` 내용으로 돌아가보겠습니다.
+
+스택에 저장되어있는 movie의 값이 변했을까요? 아닙니다.
+같은 곳을 참조하고 있고 참조하고 있는 힙의 영역이 변경되었을 뿐입니다.
+그렇다면 어떻게 해야 `setMovie()`가 `state`가 변경되었다고 인식할까요? 새로운 배열에 대한 참조를 하면 되겠죠? 그렇다면 새로운 배열을 만들어줘서 스택의 참조값을 바꿔줘야합니다.
+
+간단한 방법은 Javascript의 전개 구문 문법을 사용하는 것입니다.
+전개 구문 문법은 배열의 내용을 펼쳐서 **새로운 배열**을 만들어줍니다.
+다시 말해, 힙의 영역에 새로운 공간이 만들어지고 스택에 있는 copy의 참조값은 새로운 공간에 대한 참조로 바뀌게 된다는 것입니다.
+```
+let copy = [...movie];
+```
+이렇게 바꿔주면,
+```
+onClick={()=> {
+          let copy = [...movie]; //spread operator
+          copy[0] = '겨울왕국';
+          setMovie(copy)
+        }}
+```
+setMovie가 값이 바뀐 것을 인지하고 리렌더링해주는 것을 확인할 수 있습니다.
+
