@@ -154,4 +154,44 @@ function RenderFunctionComponent() {
 
 다음과 같이 상태가 잘못 참조되는 일이 발생할 수 있기 때문에 **반복문, 중첩문, 조건문 내에서는 사용할 수 없습니다!**
 
+### useEffect의 작동 방식
+상태의 변화에 따른 사이드 이펙트를 위해서는 `useEffect`가 필요하다.
+기본적인 작동 방식은 의존성 배열 안에 있는 상태를 관찰하고 상태에 변화가 있다면, 콜백이 실행되는 방식이다.
+렌더링시, 최초에 한 번만 실행된다.
+의존성 배열이 비어있다면, 최초 렌더링 한번시에만 콜백이 실행된다.
 
+따라서 다시 말해, 의존성 배열을 관찰하면서 값이 변했다면 콜백 함수를 실행시키고 그렇지 않다면, 실행하지 않게 만들면 되는 것이다.
+
+```
+const React = (function() {
+  let hooks = []
+  let idx = 0
+  
+  function useEffect(callback, depArray) {
+    const oldDeps = hooks[idx] // 이미 저장되어있던 의존 값 배열이 있는지 본다.
+    let hasChanged = true
+  
+    if (oldDeps) {
+      // 의존 값 배열의 값 중에서 차이가 발생했는지 확인한다.
+      hasChanged = depArray.some((dep, i) => !Object.is(dep, oldDeps[i]))
+    }
+    // 값이 바뀌었으니 콜백을 실행한다.
+    if (hasChanged) {
+      callback()
+    }
+    // useEffect도 훅의 일부분이다. hooks 배열에 넣어서 관리해준다.
+    hooks[idx] = depArray
+    idx++
+  }
+
+  function render(Component) {
+    idx = 0 // 랜더링 시 훅의 인덱스를 초기화한다.
+    const C = Component()
+    C.render()
+    return C
+  }
+  return { useEffect, render }
+})()
+```
+
+따라서 위와 같이 구현하여서 `oldDeps`와의 차이를 확인하고 그렇다면, 콜백함수 실행 아니면 실행하지 않게 만들어줬다.
