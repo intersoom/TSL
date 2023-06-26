@@ -350,3 +350,57 @@ useEffect(() => {
 ##### 2. 컴포넌트가 마운트될 때 한 번만 실행, 3. 컴포넌트가 마운트될 때 + dependency array의 값이 변경 될 때마다 실행
 dependency 배열을 빈 배열로 주면 처음 마운팅될 때 한 번 실행된 후, effect(useEffect 안에 작성된 함수)가 실행되지 않습니다. 
 다시 말해, 기본적으로는 첫번째 렌더링 + 모든 렌더링 완료된 후마다 실행되지만, dependency 배열이 **존재**하는 경우에는 dependency 배열에 있는 props, state 변경에 따른 리렌더링 시에만 effect가 실행됩니다.
+
+#### useEffect의 Clean up
+Clean up 함수란, useEffect의 effect의 return 함수입니다.
+
+컴포넌트가 언마운트되거나, 업데이트 되기 직전에 작업을 수행하는 경우 useEffect의 effect 내에서 Clean up 함수를 return 해주면 됩니다.
+
+그렇다면, clean up 함수의 실행 시점에 대해서 알아보겠습니다.
+```
+useEffect(() => {
+  ChatAPI.subscribeToFriendStatus(props.id, handleStatusChange);
+  return () => {
+    ChatAPI.unsubscribeFromFriendStatus(props.id, handleStatusChange);
+  };
+});
+```
+첫번째 랜더링에서 props.id가 10이고, 두번째 랜더링에서 20이라고 해봅시다.
+그렇다면, 두번째 랜더링 시,
+
+- 리액트가 id: 20을 가지고 UI를 랜더링
+- 브라우저 그리기
+- 리액트가 id: 10에 대한 이펙트 클린업
+- 리액트가 id: 20에 대한 이펙트 실행
+
+이런 식으로 이루어질 것입니다. 왜냐하면 첫번째 랜더링의 클린업은 id: 10을 가지고 clean up 함수가 정의되었기 때문입니다!
+이에 대한 자세한 내용을 알고 싶으면 [링크](https://www.rinae.dev/posts/a-complete-guide-to-useeffect-ko#%EA%B7%B8%EB%9F%AC%EB%A9%B4-%ED%81%B4%EB%A6%B0%EC%97%85cleanup%EC%9D%80-%EB%AD%90%EC%A7%80)를 참고하시면 좋을 것 같습니다.
+
+clean up 함수에는 두 가지 경우가 있다고 언급했습니다.
+1. 컴포넌트 언마트되거나
+```
+useEffect(() => {
+    // ...실행내용
+    return () => { // 컴포넌트가 언마운트 될 때 실행 될 Clean-up 함수
+      // Clean-up 함수 실행 내용 (초기화)
+    };
+}, []);
+```
+다음과 같이 dependency 배열에 빈 값을 넣어주면 언마운트 될 때만 clean up 함수가 실행됩니다.
+
+2. 업데이트 되기 직전마다
+```
+useEffect(() => {
+    // ...실행내용
+    return () => { // 컴포넌트가 언마운트 될 때 실행 될 Clean-up 함수
+      // Clean-up 함수 실행 내용 (초기화)
+    };
+});
+```
+다음과 같이 dependency 배열에 아무 것도 안 넣어주면 언마운트될 때를 포함하여 업데이트 되기 직전마다 실행될 것입니다.
+
+그렇다면 언제 사용할까요?
+event, setInterval, setTimeout 등과 같은 이벤트들을 정리해줄 때 사용합니다. (메모리 누수를 막을 수 있음)
+
+
+
