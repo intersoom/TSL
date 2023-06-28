@@ -402,5 +402,5 @@ useEffect(() => {
 그렇다면 언제 사용할까요?
 event, setInterval, setTimeout 등과 같은 이벤트들을 정리해줄 때 사용합니다. (메모리 누수를 막을 수 있음)
 
-
+[useEffect 참고할만한 자료](https://github.com/intersoom/TSL/blob/main/Front-end/React/UseEffect.md)
 
