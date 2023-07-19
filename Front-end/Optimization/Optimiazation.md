@@ -52,6 +52,7 @@
     - [ ] 애니메이션의 position은 `absolute`, `fixed` 지향
       → 주변 레이아웃 영향 최소화
     - [ ] JS에서 CSS 사용 시, 가급적 한 번에 처리
+      
       → **👿 나쁜 코드**
       ```jsx
       toChange.style.background = "#333";
