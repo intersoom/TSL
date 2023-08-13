@@ -13,6 +13,7 @@
 - [Closure](https://github.com/intersoom/TSL/blob/main/Front-end/Javascript/Closure.md)
 - [Hoisting](https://github.com/intersoom/TSL/blob/main/Front-end/Javascript/Hoisting.md)
 - blocking / non-blocking
+- sync / async
 ### &emsp;Optimization
 - [최적화 체크리스트(수정중)](https://github.com/intersoom/TSL/blob/main/Front-end/Optimization/Optimiazation.md)
 - [Debouncing](https://github.com/intersoom/TSL/blob/main/Front-end/Optimization/Debouncing.md)
