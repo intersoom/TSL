@@ -22,4 +22,5 @@
 - [Throttling](https://github.com/intersoom/TSL/blob/main/Front-end/Optimization/Throttling.md)
 ### &emsp;OS
 ### &emsp;Algorithmn
+- 누적합
 
