@@ -23,4 +23,6 @@
 ### &emsp;OS
 ### &emsp;Algorithmn
 - 누적합
+- 스택
+- BFS
 
