@@ -14,8 +14,8 @@
 ### &emsp;Javascript
 - [Closure](https://github.com/intersoom/TSL/blob/main/Front-end/Javascript/Closure.md)
 - [Hoisting](https://github.com/intersoom/TSL/blob/main/Front-end/Javascript/Hoisting.md)
-- [Promise](https://github.com/intersoom/TSL/blob/main/Front-end/Javascript)
-- [Async/Await](https://github.com/intersoom/TSL/blob/main/Front-end/Javascript)
+- [Promise](https://github.com/intersoom/TSL/blob/main/Front-end/Javascript/Promise.md)
+- [Async/Await](https://github.com/intersoom/TSL/blob/main/Front-end/Javascript/AsyncAwait.md)
 - blocking / non-blocking
 - sync / async
 ### &emsp;Optimization
