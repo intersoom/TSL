@@ -24,10 +24,11 @@
 - [Throttling](https://github.com/intersoom/TSL/blob/main/Front-end/Optimization/Throttling.md)
 ### &emsp;OS
 ### &emsp;Algorithmn
-- 누적합
-- 스택
+- [그리디 알고리즘](https://github.com/intersoom/TSL/blob/main/Algorithm/Greedy.md)
+- [스택](https://github.com/intersoom/TSL/blob/main/Algorithm/Stack.md)
 - BFS
 - DFS
 - 투 포인터
 - 구현
 - 에라토스테네스의 체
+- 누적합
