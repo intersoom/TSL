@@ -26,6 +26,7 @@
 ### &emsp;Algorithmn
 - [그리디 알고리즘](https://github.com/intersoom/TSL/blob/main/Algorithm/Greedy.md)
 - [스택](https://github.com/intersoom/TSL/blob/main/Algorithm/Stack.md)
+- 백트래킹
 - BFS
 - DFS
 - 투 포인터
@@ -33,3 +34,4 @@
 - 에라토스테네스의 체
 - 누적합
 - 브루트포스
+
