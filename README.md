@@ -26,7 +26,7 @@
 ### &emsp;Algorithmn
 - [그리디 알고리즘](https://github.com/intersoom/TSL/blob/main/Algorithm/Greedy.md)
 - [스택](https://github.com/intersoom/TSL/blob/main/Algorithm/Stack.md)
-- 백트래킹
+- [백트래킹](https://github.com/intersoom/TSL/blob/main/Algorithm/BackTracking.md)
 - BFS
 - DFS
 - 투 포인터
