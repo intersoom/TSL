@@ -18,6 +18,7 @@
 - [Async/Await](https://github.com/intersoom/TSL/blob/main/Front-end/Javascript/AsyncAwait.md)
 - blocking / non-blocking
 - sync / async
+- class
 ### &emsp;Optimization
 - [최적화 체크리스트(수정중)](https://github.com/intersoom/TSL/blob/main/Front-end/Optimization/Optimiazation.md)
 - [Debouncing](https://github.com/intersoom/TSL/blob/main/Front-end/Optimization/Debouncing.md)
