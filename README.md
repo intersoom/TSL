@@ -41,5 +41,5 @@
 - 브루트포스
 
 ### &emsp;CS
-- 브라우저 작동 원리
+- [브라우저 작동 원리](https://velog.io/@intersoom/TSL-웹-브라우저-동작-원리)
 - [웹 서버](https://velog.io/@intersoom/TSL-혼돈의-용어-서버)
